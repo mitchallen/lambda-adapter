@@ -18,6 +18,11 @@ describe('module factory smoke test', () => {
 
     var _factory = null;
 
+    var _event = {};
+    var _callback = function(err,message) {
+        // ...
+    }
+
     before( done => {
         // Call before all tests
         delete require.cache[require.resolve(modulePath)];
@@ -45,10 +50,17 @@ describe('module factory smoke test', () => {
         done();
     });
 
-    it('create method with no spec should return object', done => {
-        _factory.create()
+    it('create method with event and callback should return object', done => {
+        _factory.create({
+            event: _event,
+            callback: _callback
+        })
         .then(function(obj){
             should.exist(obj);
+            should.exist(obj.params);
+            should.exist(obj.response);
+            should.exist(obj.response.success);
+            should.exist(obj.response.fail);
             done();
         })
         .catch( function(err) { 
@@ -57,18 +69,15 @@ describe('module factory smoke test', () => {
         });
     });
 
-    it('health method should return ok', done => {
-        _factory.create({})
-        .then(function(obj) {
-            return obj.health();
-        })
-        .then(function(result) {
-            result.should.eql("OK");
+    it('create method with no spec should return error', done => {
+        _factory.create()
+        .then(function(obj){
+            should.exist(obj);
             done();
         })
         .catch( function(err) { 
-            console.error(err);
-            done(err); 
+            // console.error(err); 
+            done();  // to pass on err, remove err (done() - no arguments)
         });
-    });
+    });;
 });

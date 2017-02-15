@@ -76,7 +76,7 @@ module.exports.create = function (spec) {
         spec = spec || {};
         var event = spec.event,
             callback = spec.callback,
-            _params = null;
+            _params = {};
 
         if (!event) {
             reject(new Error("create requires event"));
