@@ -83,11 +83,11 @@ module.exports.create = (spec) => {
             _params = null;
 
         if(!event) {
-            reject("create requires event");
+            reject(new Error("create requires event"));
         }
 
         if(!callback) {
-            reject("create requires callback");
+            reject(new Error("create requires callback"));
         }
 
         // TODO - create POST version

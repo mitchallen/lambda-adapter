@@ -14,38 +14,6 @@
 ## lambda-adapter
 Module
 
-
-* [lambda-adapter](#module_lambda-adapter)
-    * [.package()](#module_lambda-adapter+package)
-    * [.health()](#module_lambda-adapter+health)
-
-<a name="module_lambda-adapter+package"></a>
-
-### lambda-adapter.package()
-Returns the package name
-
-**Kind**: instance method of <code>[lambda-adapter](#module_lambda-adapter)</code>  
-<a name="module_lambda-adapter+health"></a>
-
-### lambda-adapter.health()
-Health check
-
-**Kind**: instance method of <code>[lambda-adapter](#module_lambda-adapter)</code>  
-**Example** *(Usage Example)*  
-```js
-                var factory = require("@mitchallen/lambda-adapter");
-             
-                factory.create({})
-                .then(function(obj) {
-                    return obj.health();
-                })
-                .then(function(result) {
-                    console.log("HEALTH: ", result);
-                })
-                .catch( function(err) { 
-                    console.error(err); 
-                });
-```
 <a name="module_lambda-adapter-factory"></a>
 
 ## lambda-adapter-factory
@@ -53,7 +21,7 @@ Factory module
 
 <a name="module_lambda-adapter-factory.create"></a>
 
-### lambda-adapter-factory.create(spec) ⇒ <code>Promise</code>
+### lambda-adapter-factory.create(spec, event, callback) ⇒ <code>Promise</code>
 Factory method 
 It takes one spec parameter that must be an object with named parameters
 
@@ -63,16 +31,55 @@ It takes one spec parameter that must be an object with named parameters
 | Param | Type | Description |
 | --- | --- | --- |
 | spec | <code>Object</code> | Named parameters object |
+| event | <code>Object</code> | Event from Lambda handler |
+| callback | <code>function</code> | Callback from Lambda handler |
 
-**Example** *(Usage example)*  
+**Example** *(Using adapter)*  
 ```js
-    var factory = require("@mitchallen/lambda-adapter");
+
+    // lambda function
+
+    var factory = require("@mitchallen/lambda-adapter"),
  
-    factory.create({})
-    .then(function(obj) {
-        return obj.health();
-    })
-    .catch( function(err) { 
-        console.error(err); 
-    });
+    exports.handler = function(event, context, callback) {
+
+        factory.create({ 
+            event: event, 
+            callback: callback 
+        })
+        .then(function(adapter) {
+            var params = adapter.params;
+            response = adapter.response;
+            var a = params.a,
+                b = params.b;
+            // ...
+            if(bad-condition) {
+                response.fail(err);
+            } else {
+                esponse.success(object);
+            }
+        })
+        .catch( function(err) { 
+            console.error(err); 
+        });
+    };
+```
+**Example** *(Passing adapter)*  
+```js
+
+    // lambda function
+
+    var factory = require("@mitchallen/lambda-adapter"),
+        otherFactory = require(...);
+ 
+    exports.handler = function(event, context, callback) {
+
+        factory.create({ 
+            event: event, 
+            callback: callback 
+        })
+        .then(function(adapter) {
+            return otherFactory.create({ adapter: adapter });
+        });
+    };
 ```
