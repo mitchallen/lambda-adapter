@@ -23,59 +23,88 @@
  * Factory method 
  * It takes one spec parameter that must be an object with named parameters
  * @param {Object} spec Named parameters object
+ * @param {Object} event Event from Lambda handler
+ * @param {function} callback Callback from Lambda handler
  * @returns {Promise} that resolves to {module:lambda-adapter}
- * @example <caption>Usage example</caption>
-    var factory = require("@mitchallen/lambda-adapter");
+ * @example <caption>Using adapter</caption>
+
+    // lambda function
+
+    var factory = require("@mitchallen/lambda-adapter"),
  
-    factory.create({})
-    .then(function(obj) {
-        return obj.health();
-    })
-    .catch( function(err) { 
-        console.error(err); 
-    });
+    exports.handler = function(event, context, callback) {
+
+        factory.create({ 
+            event: event, 
+            callback: callback 
+        })
+        .then(function(adapter) {
+            var params = adapter.params;
+            response = adapter.response;
+            var a = params.a,
+                b = params.b;
+            // ...
+            if(bad-condition) {
+                response.fail(err);
+            } else {
+                esponse.success(object);
+            }
+        })
+        .catch( function(err) { 
+            console.error(err); 
+        });
+    };
+ *
+ * @example <caption>Passing adapter</caption>
+
+    // lambda function
+
+    var factory = require("@mitchallen/lambda-adapter"),
+        otherFactory = require(...);
+ 
+    exports.handler = function(event, context, callback) {
+
+        factory.create({ 
+            event: event, 
+            callback: callback 
+        })
+        .then(function(adapter) {
+            return otherFactory.create({ adapter: adapter });
+        });
+    };
  */
 module.exports.create = (spec) => {
 
     return new Promise((resolve, reject) => {
 
         spec = spec || {};
+        var event = spec.event,
+            callback = spec.callback,
+            _params = null;
 
-        // reject("reason");
+        if(!event) {
+            reject("create requires event");
+        }
 
-        // private 
-        let _package = "@mitchallen/lambda-adapter";
+        if(!callback) {
+            reject("create requires callback");
+        }
+
+        // TODO - create POST version
+        if(event.queryStringParameters) {
+            _params = event.queryStringParameters;
+        }
 
         resolve({
-            // public
-            /** Returns the package name
-              * @function
-              * @instance
-              * @memberof module:lambda-adapter
-            */
-            package: () => _package,
-            /** Health check
-              * @function
-              * @instance
-              * @memberof module:lambda-adapter
-              * @example <caption>Usage Example</caption>
-                var factory = require("@mitchallen/lambda-adapter");
-             
-                factory.create({})
-                .then(function(obj) {
-                    return obj.health();
-                })
-                .then(function(result) {
-                    console.log("HEALTH: ", result);
-                })
-                .catch( function(err) { 
-                    console.error(err); 
-                });
-            */
-            health: function() {
-                return new Promise((resolve,reject) => {
-                    resolve("OK");
-                });
+            params: _params,
+            response: {
+                success: function(object) {
+                    callback(null, object);
+                },
+                fail: function(err) {
+                    // callback(err);
+                    callback(null,err);
+                }
             }
         });
     });
