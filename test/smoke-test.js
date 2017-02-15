@@ -18,7 +18,22 @@ describe('module factory smoke test', () => {
 
     var _factory = null;
 
-    var _event = {};
+    var _eventEmpty = {};
+
+    var _eventFull = {
+        "resource": "/{proxy+}",
+        "path": "/my-test",
+        "httpMethod": "GET",
+        "queryStringParameters": {
+            "jsonp": true,
+            "alpha": "a",
+            "beta": "b",
+            "tokenType": "card",
+            "token": "abc123"
+        }
+    };
+
+
     var _callback = function(err,message) {
         // ...
     }
@@ -52,7 +67,7 @@ describe('module factory smoke test', () => {
 
     it('create method with event and callback should return object', done => {
         _factory.create({
-            event: _event,
+            event: _eventEmpty,
             callback: _callback
         })
         .then(function(obj){
@@ -79,5 +94,24 @@ describe('module factory smoke test', () => {
             // console.error(err); 
             done();  // to pass on err, remove err (done() - no arguments)
         });
-    });;
+    });
+
+
+    it('create method with event queryStringParameters and return object with parameters', done => {
+        _factory.create({
+            event: _eventFull,
+            callback: _callback
+        })
+        .then(function(obj){
+            should.exist(obj);
+            should.exist(obj.params);
+            should.exist(obj.params.alpha)
+            obj.params.alpha.should.eql(_eventFull.queryStringParameters.alpha);
+            done();
+        })
+        .catch( function(err) { 
+            console.error(err); 
+            done(err);  // to pass on err, remove err (done() - no arguments)
+        });
+    });
 });
