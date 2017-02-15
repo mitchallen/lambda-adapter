@@ -1,6 +1,6 @@
 @mitchallen/lambda-adapter
 ==
-PUT DESCRIPTION HERE
+aws lambda service adapter
 --
 
 <p align="left">
