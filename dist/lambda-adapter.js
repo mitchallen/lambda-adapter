@@ -45,7 +45,7 @@
            if(bad-condition) {
                response.fail(err);
            } else {
-               esponse.success(object);
+               response.success(object);
            }
        })
        .catch( function(err) { 

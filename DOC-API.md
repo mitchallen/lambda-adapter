@@ -56,7 +56,7 @@ It takes one spec parameter that must be an object with named parameters
             if(bad-condition) {
                 response.fail(err);
             } else {
-                esponse.success(object);
+                response.success(object);
             }
         })
         .catch( function(err) { 

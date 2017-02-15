@@ -86,7 +86,7 @@ It takes one spec parameter that must be an object with named parameters
             if(bad-condition) {
                 response.fail(err);
             } else {
-                esponse.success(object);
+                response.success(object);
             }
         })
         .catch( function(err) { 
@@ -140,6 +140,10 @@ Add unit tests for any new or changed functionality. Lint and test your code.
 * * *
 
 ## Version History
+
+#### Version 0.1.2
+
+* fixed type-o in code doc
 
 #### Version 0.1.1
 
