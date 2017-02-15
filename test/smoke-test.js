@@ -114,4 +114,48 @@ describe('module factory smoke test', () => {
             done(err);  // to pass on err, remove err (done() - no arguments)
         });
     });
+
+
+    it('create method with response success should succeed', done => {
+        var message = "callback test";
+        var testCB = function(err,msg) {
+            // console.log(msg);
+            msg.should.eql(message);
+            done()
+        }
+        _factory.create({
+            event: _eventEmpty,
+            callback: testCB
+        })
+        .then(function(obj){
+            obj.response.success(message);
+            // done();
+        })
+        .catch( function(err) { 
+            console.error(err); 
+            done(err);  // to pass on err, remove err (done() - no arguments)
+        });
+    });
+
+    it('create method with response fail should succeed', done => {
+        var message = "callback test";
+        var testCB = function(err,msg) {
+            // doesn't use err
+            // console.log(msg);
+            msg.should.eql(message);
+            done()
+        }
+        _factory.create({
+            event: _eventEmpty,
+            callback: testCB
+        })
+        .then(function(obj){
+            obj.response.fail(message);
+            // done();
+        })
+        .catch( function(err) { 
+            console.error(err); 
+            done(err);  // to pass on err, remove err (done() - no arguments)
+        });
+    });
 });

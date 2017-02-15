@@ -141,6 +141,10 @@ Add unit tests for any new or changed functionality. Lint and test your code.
 
 ## Version History
 
+#### Version 0.1.3
+
+* brought code coverage up to 100%
+
 #### Version 0.1.2
 
 * fixed type-o in code doc
