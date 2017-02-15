@@ -1,6 +1,6 @@
 {
   "name": "@mitchallen/lambda-adapter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "aws lambda service adapter",
   "main": "dist/lambda-adapter.js",
   "scripts": {
