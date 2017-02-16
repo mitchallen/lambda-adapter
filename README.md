@@ -141,6 +141,10 @@ Add unit tests for any new or changed functionality. Lint and test your code.
 
 ## Version History
 
+#### Version 0.2.1
+
+* fixed some stringify issue that affect API gatewat
+
 #### Version 0.2.0
 
 * Broke backward compatibility
