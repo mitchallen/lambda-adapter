@@ -86,7 +86,7 @@ It takes one spec parameter that must be an object with named parameters
             if(bad-condition) {
                 response.fail(err);
             } else {
-                response.success(object);
+                response.json(object);
             }
         })
         .catch( function(err) { 
@@ -140,6 +140,11 @@ Add unit tests for any new or changed functionality. Lint and test your code.
 * * *
 
 ## Version History
+
+#### Version 0.2.0
+
+* Broke backward compatibility
+* response.success replaced by response.json and response.jsonp
 
 #### Version 0.1.3
 

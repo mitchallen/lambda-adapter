@@ -47,7 +47,7 @@
             if(bad-condition) {
                 response.fail(err);
             } else {
-                response.success(object);
+                response.json(object);
             }
         })
         .catch( function(err) { 
@@ -98,11 +98,39 @@ module.exports.create = (spec) => {
         resolve({
             params: _params,
             response: {
-                success: function(object) {
-                    callback(null, object);
+                jsonp: function(res) {
+
+                    // TODO - demand res.body
+
+                    var cb = null;
+
+                    if(res.headers) {
+                        cb = res.headers || res.headers["x-callback"];
+                    }
+
+                    // res.body = JSON.stringify(res.body);
+
+                    if(cb) {
+                        res.body = JSON.stringify(res.body);
+                        res.body = `/**/ typeof ${cb} === 'function' && ${cb}(${res.body});`;
+                        res.headers = {
+                            "x-jsonp" : "true", 
+                            "Content-Type" : "text/javascript"
+                        };
+                    }
+
+                    // AWS API Gateway will convert to res.body to res.text (based on header?)
+                    // res.text = successJSON;
+
+                    callback(null, res);
+                },
+                json: function(res) {
+                    // res.body = JSON.stringify(res.body);
+                    callback(null, res);
                 },
                 fail: function(err) {
                     // callback(err);
+                    // err.body = JSON.stringify(err.body);
                     callback(null,err);
                 }
             }

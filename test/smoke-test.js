@@ -74,7 +74,8 @@ describe('module factory smoke test', () => {
             should.exist(obj);
             should.exist(obj.params);
             should.exist(obj.response);
-            should.exist(obj.response.success);
+            should.exist(obj.response.json);
+            should.exist(obj.response.jsonp);
             should.exist(obj.response.fail);
             done();
         })
@@ -116,7 +117,7 @@ describe('module factory smoke test', () => {
     });
 
 
-    it('create method with response success should succeed', done => {
+    it('create method with response json should succeed', done => {
         var message = "callback test";
         var testCB = function(err,msg) {
             // console.log(msg);
@@ -128,7 +129,28 @@ describe('module factory smoke test', () => {
             callback: testCB
         })
         .then(function(obj){
-            obj.response.success(message);
+            obj.response.json(message);
+            // done();
+        })
+        .catch( function(err) { 
+            console.error(err); 
+            done(err);  // to pass on err, remove err (done() - no arguments)
+        });
+    });
+
+    it('create method with response jsonp should succeed', done => {
+        var message = "callback test";
+        var testCB = function(err,msg) {
+            // console.log(msg);
+            msg.should.eql(message);
+            done()
+        }
+        _factory.create({
+            event: _eventEmpty,
+            callback: testCB
+        })
+        .then(function(obj){
+            obj.response.jsonp(message);
             // done();
         })
         .catch( function(err) { 
