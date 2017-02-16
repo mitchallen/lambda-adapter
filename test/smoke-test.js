@@ -118,7 +118,9 @@ describe('module factory smoke test', () => {
 
 
     it('create method with response json should succeed', done => {
-        var message = "callback test";
+        var message = { 
+            body: "callback test"
+        };
         var testCB = function(err,msg) {
             // console.log(msg);
             msg.should.eql(message);
@@ -139,7 +141,9 @@ describe('module factory smoke test', () => {
     });
 
     it('create method with response jsonp should succeed', done => {
-        var message = "callback test";
+        var message = { 
+            body: "callback test"
+        };
         var testCB = function(err,msg) {
             // console.log(msg);
             msg.should.eql(message);
@@ -160,7 +164,9 @@ describe('module factory smoke test', () => {
     });
 
     it('create method with response fail should succeed', done => {
-        var message = "callback test";
+        var message = { 
+            body: "callback test"
+        };
         var testCB = function(err,msg) {
             // doesn't use err
             // console.log(msg);
