@@ -51,7 +51,7 @@ Factory module
 
 <a name="module_lambda-adapter-factory.create"></a>
 
-### lambda-adapter-factory.create(spec, event, callback) ⇒ <code>Promise</code>
+### lambda-adapter-factory.create(spec, env, event, callback) ⇒ <code>Promise</code>
 Factory method 
 It takes one spec parameter that must be an object with named parameters
 
@@ -61,6 +61,7 @@ It takes one spec parameter that must be an object with named parameters
 | Param | Type | Description |
 | --- | --- | --- |
 | spec | <code>Object</code> | Named parameters object |
+| env | <code>Object</code> | An object containing key values pairs of env variables |
 | event | <code>Object</code> | Event from Lambda handler |
 | callback | <code>function</code> | Callback from Lambda handler |
 
@@ -74,12 +75,17 @@ It takes one spec parameter that must be an object with named parameters
     exports.handler = function(event, context, callback) {
 
         factory.create({ 
+            env: {
+                "stripeKey": process.env.TEST_STRIPE_SECRET || null
+            },
             event: event, 
             callback: callback 
         })
         .then(function(adapter) {
+            var env = adapter.env;
             var params = adapter.params;
             response = adapter.response;
+            var stripeKey = env["stripeKey"];
             var a = params.a,
                 b = params.b;
             // ...
@@ -105,6 +111,9 @@ It takes one spec parameter that must be an object with named parameters
     exports.handler = function(event, context, callback) {
 
         factory.create({ 
+            env: {
+                "stripeKey": process.env.TEST_STRIPE_SECRET || null
+            },
             event: event, 
             callback: callback 
         })
@@ -113,7 +122,6 @@ It takes one spec parameter that must be an object with named parameters
         });
     };
 ```
-
 
 * * *
 
@@ -140,6 +148,10 @@ Add unit tests for any new or changed functionality. Lint and test your code.
 * * *
 
 ## Version History
+
+#### Version 0.2.2
+
+* Added __env__ parameter for passing environment parameters
 
 #### Version 0.2.1
 

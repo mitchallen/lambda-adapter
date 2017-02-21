@@ -85,6 +85,34 @@ describe('module factory smoke test', () => {
         });
     });
 
+    it('create method with env should return object', done => {
+        var key = "secret",
+            value = "foo";
+        _factory.create({
+            env: {
+                [key]: value
+            },
+            event: _eventEmpty,
+            callback: _callback
+        })
+        .then(function(obj){
+            should.exist(obj);
+            should.exist(obj.env);
+            should.exist(obj.env[key]);
+            obj.env[key].should.eql(value);
+            should.exist(obj.params);
+            should.exist(obj.response);
+            should.exist(obj.response.json);
+            should.exist(obj.response.jsonp);
+            should.exist(obj.response.fail);
+            done();
+        })
+        .catch( function(err) { 
+            console.error(err); 
+            done(err);  // to pass on err, remove err (done() - no arguments)
+        });
+    });
+
     it('create method with no spec should return error', done => {
         _factory.create()
         .then(function(obj){

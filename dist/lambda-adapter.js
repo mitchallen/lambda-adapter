@@ -24,6 +24,7 @@
 * Factory method 
 * It takes one spec parameter that must be an object with named parameters
 * @param {Object} spec Named parameters object
+* @param {Object} env An object containing key values pairs of env variables
 * @param {Object} event Event from Lambda handler
 * @param {function} callback Callback from Lambda handler
 * @returns {Promise} that resolves to {module:lambda-adapter}
@@ -33,12 +34,17 @@
 
    exports.handler = function(event, context, callback) {
         factory.create({ 
+           env: {
+               "stripeKey": process.env.TEST_STRIPE_SECRET || null
+           },
            event: event, 
            callback: callback 
        })
        .then(function(adapter) {
+           var env = adapter.env;
            var params = adapter.params;
            response = adapter.response;
+           var stripeKey = env["stripeKey"];
            var a = params.a,
                b = params.b;
            // ...
@@ -60,6 +66,9 @@
 
    exports.handler = function(event, context, callback) {
         factory.create({ 
+           env: {
+               "stripeKey": process.env.TEST_STRIPE_SECRET || null
+           },
            event: event, 
            callback: callback 
        })
@@ -74,7 +83,8 @@ module.exports.create = function (spec) {
     return new Promise(function (resolve, reject) {
 
         spec = spec || {};
-        var event = spec.event,
+        var _env = spec.env,
+            event = spec.event,
             callback = spec.callback,
             _params = {};
 
@@ -93,6 +103,7 @@ module.exports.create = function (spec) {
 
         resolve({
             params: _params,
+            env: _env,
             response: {
                 jsonp: function jsonp(res) {
 
