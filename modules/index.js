@@ -25,9 +25,10 @@ var pathParser = require('./path-parser');
  * Factory method 
  * It takes one spec parameter that must be an object with named parameters
  * @param {Object} spec Named parameters object
- * @param {Object} env An object containing key values pairs of env variables
- * @param {Object} event Event from Lambda handler
- * @param {function} callback Callback from Lambda handler
+ * @param {Object} spec.env An object containing key values pairs of env variables
+ * @param {Object} spec.regex Path regex, like '/:model/:id'
+ * @param {Object} spec.event Event from Lambda handler
+ * @param {function} spec.callback Callback from Lambda handler
  * @returns {Promise} that resolves to {module:lambda-adapter}
  * @example <caption>Using adapter</caption>
 

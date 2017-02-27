@@ -21,7 +21,7 @@ Factory module
 
 <a name="module_lambda-adapter-factory.create"></a>
 
-### lambda-adapter-factory.create(spec, env, event, callback) ⇒ <code>Promise</code>
+### lambda-adapter-factory.create(spec) ⇒ <code>Promise</code>
 Factory method 
 It takes one spec parameter that must be an object with named parameters
 
@@ -31,9 +31,10 @@ It takes one spec parameter that must be an object with named parameters
 | Param | Type | Description |
 | --- | --- | --- |
 | spec | <code>Object</code> | Named parameters object |
-| env | <code>Object</code> | An object containing key values pairs of env variables |
-| event | <code>Object</code> | Event from Lambda handler |
-| callback | <code>function</code> | Callback from Lambda handler |
+| spec.env | <code>Object</code> | An object containing key values pairs of env variables |
+| spec.regex | <code>Object</code> | Path regex, like '/:model/:id' |
+| spec.event | <code>Object</code> | Event from Lambda handler |
+| spec.callback | <code>function</code> | Callback from Lambda handler |
 
 **Example** *(Using adapter)*  
 ```js
