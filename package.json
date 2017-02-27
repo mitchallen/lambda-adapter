@@ -13,15 +13,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/mitchallen/lambda-adapter.git"
-  },
-  "repository": {
-    "type": "git",
     "url": "https://github.com/mitchallen/lambda-adapter.git"
   },
   "author": "Mitch Allen <npm@mitchallen.com> (http://mitchallen.com)",
   "license": "MIT",
   "dependencies": {
+    "path-to-regexp-wrap": "^1.1.0"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.18.0",

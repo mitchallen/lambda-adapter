@@ -8,6 +8,8 @@
 
 "use strict";
 
+var pathParser = require('./path-parser');
+
 /**
  * Module
  * @module lambda-adapter
@@ -88,9 +90,9 @@ module.exports.create = (spec) => {
 
         spec = spec || {};
         var _env = spec.env,
+            _regex = spec.regex,  // like '/:model/:id'
             event = spec.event,
-            callback = spec.callback,
-            _params = {};
+            callback = spec.callback;
 
         if(!event) {
             reject(new Error("create requires event"));
@@ -100,14 +102,17 @@ module.exports.create = (spec) => {
             reject(new Error("create requires callback"));
         }
 
-        // TODO - create POST version
-        if(event.queryStringParameters) {
-            _params = event.queryStringParameters;
-        }
+        var _params = pathParser.parse({ 
+            path: event.path,
+            regex: _regex 
+        });
 
         resolve({
             params: _params,
             env: _env,
+            method: event.httpMethod,
+            query: event.queryStringParameters || {},
+            body: JSON.parse(event.body) || {},
             response: {
                 jsonp: function(res) {
 
@@ -135,8 +140,13 @@ module.exports.create = (spec) => {
                     callback(null, res);
                 },
                 json: function(res) {
+
+                    // TEMP: for debugging
+                    // res.body.event = event;
+
                     res.body = JSON.stringify(res.body);
                     // callback(null, JSON.stringify(res));
+
                     callback(null, res);
                 },
                 fail: function(err) {
